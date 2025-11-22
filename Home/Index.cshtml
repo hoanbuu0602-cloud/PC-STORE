@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PC Products</title>
+    <link href="~/css/stylepc.css" rel="stylesheet" />
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">PC GEAR</div>
+        <nav>
+            <a href="login.html" class="login-btn">Login</a>
+
+            <a href="#" class="cart-icon">
+                🛒 <span id="cart-count">0</span>
+            </a>
+        </nav>
+
+    </header>
+
+    <section class="product-section">
+        <h2>PC Gaming List</h2>
+
+        <input type="text" id="search" placeholder="Search PC..."
+               style="padding:10px;width:100%;max-width:350px;margin:10px 0;border:1px solid #ccc;border-radius:4px;">
+
+        <div class="product-grid">
+
+            <div class="product-card" data-id="1" data-name="PC i5 / RTX 4060" data-price="17500000" data-img="https://pcmarket.vn/media/product/11300_dsc05350.jpg">
+                <img src="https://pcmarket.vn/media/product/11300_dsc05350.jpg">
+                <h3>PC i5 / RTX 4060</h3>
+                <p class="price">17,500,000 ₫</p>
+                <button class="add-cart">Add to cart</button>
+            </div>
+
+            <div class="product-card" data-id="2" data-name="PC i7 / RTX 4070" data-price="29900000" data-img="https://pc79.vn/wp-content/uploads/2024/02/GRAZOX-I5-13TH-3060-I5303-1.jpg">
+                <img src="https://pc79.vn/wp-content/uploads/2024/02/GRAZOX-I5-13TH-3060-I5303-1.jpg">
+                <h3>PC i7 / RTX 4070</h3>
+                <p class="price">29,900,000 ₫</p>
+                <button class="add-cart">Add to cart</button>
+            </div>
+
+            <div class="product-card" data-id="3" data-name="PC Ryzen 5 / RTX 3060" data-price="13900000" data-img="https://i.ebayimg.com/images/g/md4AAOSwEX1mIijZ/s-l400.jpg">
+                <img src="https://i.ebayimg.com/images/g/md4AAOSwEX1mIijZ/s-l400.jpg">
+                <h3>PC Ryzen 5 / RTX 3060</h3>
+                <p class="price">13,900,000 ₫</p>
+                <button class="add-cart">Add to cart</button>
+            </div>
+
+            <div class="product-card" data-id="4" data-name="PC i5 / RTX 4060 Ti" data-price="21500000" data-img="https://cdn.hstatic.net/products/1000288298/11344_dsc05340_c51ef747f0804436844000a9558ee488_grande.jpg">
+                <img src="https://cdn.hstatic.net/products/1000288298/11344_dsc05340_c51ef747f0804436844000a9558ee488_grande.jpg">
+                <h3>PC i5 / RTX 4060 Ti</h3>
+                <p class="price">21,500,000 ₫</p>
+                <button class="add-cart">Add to cart</button>
+            </div>
+
+            <div class="product-card" data-id="5" data-name="PC Ryzen 7 / RTX 4080" data-price="45000000" data-img="https://cdn.hstatic.net/products/1000288298/dsc02814_copy_ade64291de1442fa8f06ea3073f679cc_master.jpg">
+                <img src="https://cdn.hstatic.net/products/1000288298/dsc02814_copy_ade64291de1442fa8f06ea3073f679cc_master.jpg">
+                <h3>PC Ryzen 7 / RTX 4080</h3>
+                <p class="price">45,000,000 ₫</p>
+                <button class="add-cart">Add to cart</button>
+            </div>
+
+        </div>
+
+        <div id="toast" class="toast">Đã thêm vào giỏ hàng ✅</div>
+
+    </section>
+
+    <footer>
+        <div style="max-width:1200px;margin:auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;padding:30px 20px;">
+
+            <div class="footer-section">
+                <h4>Liên hệ</h4>
+                <p>📍  TP. Hồ Chí Minh</p>
+                <p>📞 0909 888 777</p>
+                <p>✉️ support@pcgear.vn</p>
+            </div>
+
+            <div>
+                <h3 style="margin-bottom:10px;">PC GEAR</h3>
+                <p>Build your dream PC with the best deals & premium components.</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Theo dõi chúng tôi</h4>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/profile.php?id=100071197471149&mibextid=ZbWKwL"><img src="https://cdn-icons-png.flaticon.com/512/174/174848.png" alt="Facebook" width="30" height="30"></a>
+                    <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram" width="30" height="30"></a>
+
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            document.getElementById("cart-count").innerText = cart.length;
+        }
+
+        document.addEventListener("DOMContentLoaded", updateCartCount);
+
+        document.querySelectorAll(".add-cart").forEach(btn => {
+            btn.addEventListener("click", function () {
+
+                let card = this.closest(".product-card");
+
+                let item = {
+                    id: card.dataset.id,
+                    name: card.dataset.name,
+                    price: parseInt(card.dataset.price),
+                    img: card.dataset.img
+                };
+
+                let cart = JSON.parse(localStorage.getItem("cart")) || [];
+                cart.push(item);
+                localStorage.setItem("cart", JSON.stringify(cart));
+
+                updateCartCount();
+
+                let toast = document.getElementById("toast");
+                toast.style.opacity = 1;
+                setTimeout(() => toast.style.opacity = 0, 1500);
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const cartBtn = document.querySelector(".cart-icon");
+            if (cartBtn) {
+                cartBtn.addEventListener("click", () => {
+                    window.location.href = "cart.html";
+                });
+            }
+        });
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            document.getElementById("cart-count").innerText = cart.length;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            updateCartCount();
+
+            // CLICK LOGIN → chuyển trang login
+            const loginBtn = document.querySelector(".login-btn");
+            if (loginBtn) {
+                loginBtn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    window.location.href = "login.html";
+                });
+            }
+
+            // CLICK GIỎ HÀNG → chuyển trang cart
+            const cartBtn = document.querySelector(".cart-icon");
+            if (cartBtn) {
+                cartBtn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    window.location.href = "cart.html";
+                });
+            }
+        });
+
+        // THÊM VÀO GIỎ
+        document.querySelectorAll(".add-cart").forEach(btn => {
+            btn.addEventListener("click", function () {
+
+                let card = this.closest(".product-card");
+
+                let item = {
+                    id: card.dataset.id,
+                    name: card.dataset.name,
+                    price: parseInt(card.dataset.price),
+                    img: card.dataset.img
+                };
+
+                let cart = JSON.parse(localStorage.getItem("cart")) || [];
+                cart.push(item);
+                localStorage.setItem("cart", JSON.stringify(cart));
+
+                updateCartCount();
+
+                let toast = document.getElementById("toast");
+                toast.style.opacity = 1;
+                setTimeout(() => toast.style.opacity = 0, 1500);
+            });
+        });
+
+    </script>
+
+</body>
+</html>

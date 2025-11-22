@@ -1,0 +1,224 @@
+﻿<section class="cart-section">
+    <h2>Giỏ Hàng Của Bạn</h2>
+
+    <div id="cartItems" class="cart-items"></div>
+
+    <h3 class="total">Total: <span id="total">0 ₫</span></h3>
+
+    <!-- Form thông tin khách hàng -->
+    <div class="customer-info">
+        <input type="text" id="customerName" placeholder="Tên của bạn">
+        <input type="text" id="customerAddress" placeholder="Địa chỉ giao hàng">
+        <select id="paymentMethod">
+            <option value="">Chọn phương thức thanh toán</option>
+            <option value="cash">Tiền mặt</option>
+            <option value="card">Thẻ ngân hàng</option>
+            <option value="momo">Ví Momo</option>
+        </select>
+    </div>
+
+    <button onclick="checkout()" class="btn-checkout">Checkout</button>
+</section>
+
+<style>
+    /* Tổng thể section */
+    .cart-section {
+        padding: 40px;
+        max-width: 700px;
+        margin: auto;
+        background: #1b1b1b;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+        font-family: 'Arial', sans-serif;
+        color: #e6e6e6;
+    }
+
+        /* Tiêu đề */
+        .cart-section h2 {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 30px;
+        }
+
+    /* Giỏ hàng */
+    .cart-items {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+        .cart-items .cart-item {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #333;
+            border-radius: 10px;
+            background: #242424;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+            .cart-items .cart-item:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+            }
+
+        .cart-items img {
+            width: 120px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        /* Text trong item */
+        .cart-items h3 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 18px;
+        }
+
+        .cart-items p {
+            margin: 5px 0 0;
+            font-size: 16px;
+            color: #bbbbbb;
+        }
+
+        /* Nút xóa */
+        .cart-items button {
+            padding: 8px 12px;
+            background: #ff4040;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+            .cart-items button:hover {
+                background: #ff1c1c;
+            }
+
+    /* Tổng tiền */
+    .total {
+        text-align: right;
+        font-size: 20px;
+        color: #ffffff;
+        margin-bottom: 20px;
+    }
+
+    /* Form thông tin khách hàng */
+    .customer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+        .customer-info input,
+        .customer-info select {
+            padding: 12px 15px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #2b2b2b;
+            color: #e6e6e6;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+
+            .customer-info input:focus,
+            .customer-info select:focus {
+                outline: none;
+                border-color: #00c6ff;
+                box-shadow: 0 0 5px rgba(0,198,255,0.5);
+            }
+
+    /* Nút Checkout */
+    .btn-checkout {
+        width: 100%;
+        padding: 14px;
+        font-size: 18px;
+        background: linear-gradient(90deg, #0055ff, #00c6ff);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s;
+        font-weight: bold;
+    }
+
+        .btn-checkout:hover {
+            background: linear-gradient(90deg, #003fcc, #00a1d6);
+            transform: translateY(-2px);
+        }
+</style>
+
+
+<script>
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    function loadCart() {
+        const container = document.getElementById("cartItems");
+        container.innerHTML = "";
+        let total = 0;
+
+        if (cart.length === 0) {
+            container.innerHTML = "<p>Giỏ hàng trống.</p>";
+            document.getElementById("total").innerText = "0 ₫";
+            return;
+        }
+
+        cart.forEach((item, index) => {
+            total += item.price;
+
+            const div = document.createElement("div");
+            div.className = "cart-item";
+            div.innerHTML = `
+            <img src="${item.img}">
+            <div style="flex:1;">
+                <h3>${item.name}</h3>
+                <p>${item.price.toLocaleString()} ₫</p>
+            </div>
+            <button onclick="removeItem(${index})">Xóa</button>
+        `;
+            container.appendChild(div);
+        });
+
+        document.getElementById("total").innerText = total.toLocaleString() + " ₫";
+    }
+
+    function removeItem(i) {
+        cart.splice(i, 1);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        loadCart();
+    }
+
+    function checkout() {
+        const name = document.getElementById("customerName").value.trim();
+        const address = document.getElementById("customerAddress").value.trim();
+        const payment = document.getElementById("paymentMethod").value;
+
+        if (cart.length === 0) {
+            alert("Giỏ hàng đang trống!");
+            return;
+        }
+
+        if (!name || !address || !payment) {
+            alert("Vui lòng điền đầy đủ thông tin và chọn phương thức thanh toán!");
+            return;
+        }
+
+        // Thông báo thành công
+        alert("Đặt hàng thành công! Cảm ơn bạn đã mua hàng ❤️");
+
+        // Xóa giỏ hàng
+        localStorage.removeItem("cart");
+
+        // Chuyển hướng về trang chủ sau 1.5 giây
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 1500);
+    }
+
+
+    loadCart();
+</script>
